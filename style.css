@@ -1,0 +1,17 @@
+:root{--bg:#f6f7fb;--card:#ffffff;--accent:#ff4d4f;--muted:#666}
+*{box-sizing:border-box}
+body{font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);margin:0;padding:20px;color:#222}
+header{text-align:center;margin-bottom:12px}
+h1{margin:6px 0}
+.muted{color:var(--muted)}
+.card{max-width:980px;margin:0 auto;background:var(--card);padding:18px;border-radius:10px;box-shadow:0 6px 24px rgba(18,18,18,0.06)}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;margin-bottom:12px}
+input{padding:10px;border-radius:8px;border:1px solid #ddd;min-width:220px}
+button{padding:10px 14px;border-radius:8px;border:0;background:var(--accent);color:white;cursor:pointer}
+button:hover{opacity:0.95}
+.profileRow{display:flex;gap:16px;align-items:center}
+#profileAvatar{width:96px;height:96px;border-radius:8px;object-fit:cover;border:1px solid #eee}
+.hidden{display:none}
+canvas{width:100%!important;max-width:900px;background:#fff;border-radius:8px;padding:8px;margin-top:10px}
+.error{color:crimson;margin-left:8px}
+footer{margin-top:12px;text-align:center;color:var(--muted)}

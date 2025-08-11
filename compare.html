@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LeetTracker — Compare</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <h1>LeetTracker — Compare</h1>
+  </header>
+
+  <main class="card">
+    <div class="controls">
+      <input id="userA" placeholder="First username" />
+      <input id="userB" placeholder="Second username" />
+      <button id="btnCompare">Compare</button>
+      <span id="error" class="error"></span>
+    </div>
+
+    <section id="compareSection" class="hidden">
+      <h3>Difficulty-wise solved comparison</h3>
+      <canvas id="compareChart" height="160"></canvas>
+    </section>
+  </main>
+
+  <footer class="muted">Uses same LeetCode data source as single-user view.</footer>
+
+  <script src="compare.js"></script>
+</body>
+</html>

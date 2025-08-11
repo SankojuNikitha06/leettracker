@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LeetTracker</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <h1>LeetTracker</h1>
+    <p class="muted">Track solved problems by topic and consistency (daily submissions).</p>
+  </header>
+
+  <main class="card">
+    <div class="controls">
+      <input id="username" placeholder="LeetCode username (e.g. tourist)" />
+      <button id="btnFetch">Fetch</button>
+      <span id="error" class="error"></span>
+    </div>
+
+    <section id="profile" class="hidden">
+      <h2 id="profileName"></h2>
+      <div class="profileRow">
+        <div id="profileInfo"></div>
+        <img id="profileAvatar" alt="" />
+      </div>
+    </section>
+
+    <section id="charts" class="hidden">
+      <h3>Problems by Topic (selected common DS)</h3>
+      <canvas id="topicsChart" height="160"></canvas>
+
+      <h3>Consistency (last 30 days submissions)</h3>
+      <canvas id="consistencyChart" height="120"></canvas>
+    </section>
+  </main>
+
+  <footer class="muted">Note: LeetCode GraphQL requests may be blocked by CORS in some browsers. See README for proxy instructions.</footer>
+
+  <script src="index.js"></script>
+</body>
+</html>
