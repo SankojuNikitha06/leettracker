@@ -1,44 +1,116 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LeetTracker</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LeetTracker — LeetCode Stats Visualizer</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="index.js"></script>
+<style>
+  body {
+    background-color: rgb(147, 161, 188);
+    font-family: Arial, sans-serif; /* fixed typo */
+  }
+  .upNav {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+    overflow: hidden;
+    background-color: #222;
+  }
+  .upNav li {
+    float: right;
+  }
+  .upNav li a {
+    display: block;
+    color: black; /* changed to black for visibility */
+    background-color: white; /* ensures contrast on dark nav bar */
+    text-align: center;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px; /* optional: rounded buttons */
+    margin-left: 5px;
+  }
+  .upNav li a:hover {
+    background-color: #ddd; /* softer hover background */
+  }
+  .card, .infoCard {
+    background-color: white;
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 8px;
+    max-width: 800px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* fixed incomplete property */
+  }
+  .err {
+    color: red;
+    font-size: 14px;
+  }
+  table.infotable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  table.infotable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  h2 {
+    margin-top: 0;
+  }
+</style>
+
 </head>
 <body>
-  <header>
-    <h1>LeetTracker</h1>
-    <p class="muted">Track solved problems by topic and consistency (daily submissions).</p>
-  </header>
+  <!-- Navigation -->
+  <ul class="upNav">
+    <li style="float:left;margin:5px;">
+      <span style="font-size:24px;color:#fff;font-family: cambria;">LeetTracker</span>
+    </li>
+    <li><a href="compare.html">Compare</a></li>
+  </ul>
 
-  <main class="card">
-    <div class="controls">
-      <input id="username" placeholder="LeetCode username (e.g. tourist)" />
-      <button id="btnFetch">Fetch</button>
-      <span id="error" class="error"></span>
+  <!-- Search Section -->
+  <div class="card" style="text-align:center;">
+    <h1 style="font-family: cambria; color:#222; margin-bottom:10px;">
+      LeetTracker — LeetCode Stats Visualizer
+    </h1>
+    <input type="text" id="handle" placeholder="Enter LeetCode username" />
+    <button type="button" onclick="getData()">Find</button>
+    <span id="error" class="err"></span>
+  </div>
+
+  <!-- Results -->
+  <div id="hiddendiv" style="display:none;">
+    <!-- Profile / Key Stats -->
+    <div class="infoCard">
+      <div class="container"><h2><b>User Profile</b></h2></div>
+      <div class="contents">
+        <table class="infotable" id="userTable"></table>
+      </div>
     </div>
 
-    <section id="profile" class="hidden">
-      <h2 id="profileName"></h2>
-      <div class="profileRow">
-        <div id="profileInfo"></div>
-        <img id="profileAvatar" alt="" />
+    <!-- Problem Stats -->
+    <div class="infoCard">
+      <div class="container"><h2><b>Problem Stats</b></h2></div>
+      <div class="contents">
+        <table class="infotable" id="problemTable"></table>
       </div>
-    </section>
+    </div>
 
-    <section id="charts" class="hidden">
-      <h3>Problems by Topic (selected common DS)</h3>
-      <canvas id="topicsChart" height="160"></canvas>
-
-      <h3>Consistency (last 30 days submissions)</h3>
-      <canvas id="consistencyChart" height="120"></canvas>
-    </section>
-  </main>
-
-  <footer class="muted">Note: LeetCode GraphQL requests may be blocked by CORS in some browsers. See README for proxy instructions.</footer>
-
-  <script src="index.js"></script>
+    <!-- Pie Chart -->
+    <div class="card">
+      <div class="container"><h2><b>Solved Breakdown</b></h2></div>
+      <div id="pieSummary" style="font-weight: bold; margin-bottom: 10px; text-align: center;"></div>
+      <div class="contents">
+        <canvas id="pieChart" width="400" height="280"></canvas>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
