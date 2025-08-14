@@ -1,33 +1,180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LeetTracker — Compare</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LeetTracker — Compare Users</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+  <style>
+    body { 
+        background-color: rgb(147, 161, 188); 
+        font-family: Cambria, sans-serif; 
+    }
+    .upNav { 
+        list-style: none; 
+        margin: 0; 
+        padding: 10px; 
+        overflow: hidden; 
+        background-color: black; 
+    }
+    .upNav li {
+         float: right; 
+        }
+    .upNav li a { 
+        display: block;
+        color: white; 
+        text-align: center;
+        padding: 8px 16px; 
+        text-decoration: none; 
+    }
+    .upNav li a:hover { 
+        background-color: #575757; 
+    }
+    .upNav span { 
+        font-size: 24px; 
+        color: white; 
+    }
+    .card, .infoCard { 
+        background: white; 
+        margin: 20px auto; 
+        padding: 20px; 
+        border-radius: 10px; 
+        max-width: 600px; 
+    }
+    table { 
+        border-collapse: collapse; 
+        width: 100%; 
+    }
+    th, td { 
+        border: 1px solid #ccc; 
+        padding: 8px; 
+        text-align: center; 
+    }
+    th { 
+        background-color: #eee; 
+    }
+    .err { 
+        color: red; 
+        display: block; 
+        margin-top: 10px; 
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>LeetTracker — Compare</h1>
-  </header>
+<ul class="upNav">
+  <li style="float:left;margin:5px;">
+    <span>LeetTracker — Compare Users</span>
+  </li>
+  <li><a href="index.html">Home</a></li>
+</ul>
 
-  <main class="card">
-    <div class="controls">
-      <input id="userA" placeholder="First username" />
-      <input id="userB" placeholder="Second username" />
-      <button id="btnCompare">Compare</button>
-      <span id="error" class="error"></span>
-    </div>
+<div class="card" style="text-align:center;">
+  <h1 style="color:#222; margin-bottom:10px;">Compare Users</h1>
+  <input type="text" id="handle1" placeholder="First username" />
+  <input type="text" id="handle2" placeholder="Second username" />
+  <button type="button" onclick="compareData()">Compare</button>
+  <span id="error" class="err"></span>
+</div>
 
-    <section id="compareSection" class="hidden">
-      <h3>Difficulty-wise solved comparison</h3>
-      <canvas id="compareChart" height="160"></canvas>
-    </section>
-  </main>
+<div id="hiddendiv" style="display:none;">
+  <div class="infoCard">
+    <h2><b>Problems comparision Table</b></h2>
+    <table id="compareTable"></table>
+  </div>
+  <div class="card">
+    <h2><b>Problems Solved</b></h2>
+    <canvas id="compareChart" width="400" height="280"></canvas>
+  </div>
+</div>
 
-  <footer class="muted">Uses same LeetCode data source as single-user view.</footer>
+<script>
+async function getLeetCodeStats(username) {
+  try {
+    let res = await fetch(`https://leetcode-stats-api.herokuapp.com/${username}`);
+    let data = await res.json();
+    if (data.status === 'error') return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
 
-  <script src="compare.js"></script>
+async function compareData() {
+  let user1 = document.getElementById("handle1").value.trim();
+  let user2 = document.getElementById("handle2").value.trim();
+  let errorEl = document.getElementById("error");
+  errorEl.textContent = "";
+
+  if (!user1 || !user2) {
+    errorEl.textContent = "Please enter both usernames.";
+    return;
+  }
+
+  let stats1 = await getLeetCodeStats(user1);
+  let stats2 = await getLeetCodeStats(user2);
+
+  if (!stats1 || !stats2) {
+    errorEl.textContent = "Could not fetch data for one or both users.";
+    return;
+  }
+
+  document.getElementById("hiddendiv").style.display = "block";
+
+  // Build Table
+  let tableHTML = `
+    <tr>
+      <th>Metric</th>
+      <th>${user1}</th>
+      <th>${user2}</th>
+    </tr>
+    <tr>
+      <td>Total Solved</td>
+      <td>${stats1.totalSolved}</td>
+      <td>${stats2.totalSolved}</td>
+    </tr>
+    <tr>
+      <td>Easy</td>
+      <td>${stats1.easySolved}</td>
+      <td>${stats2.easySolved}</td>
+    </tr>
+    <tr>
+      <td>Medium</td>
+      <td>${stats1.mediumSolved}</td>
+      <td>${stats2.mediumSolved}</td>
+    </tr>
+    <tr>
+      <td>Hard</td>
+      <td>${stats1.hardSolved}</td>
+      <td>${stats2.hardSolved}</td>
+    </tr>
+  `;
+  document.getElementById("compareTable").innerHTML = tableHTML;
+
+  // Chart
+  let ctx = document.getElementById("compareChart").getContext("2d");
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Easy', 'Medium', 'Hard'],
+      datasets: [
+        {
+          label: user1,
+          data: [stats1.easySolved, stats1.mediumSolved, stats1.hardSolved],
+          backgroundColor: 'rgba(54, 162, 235, 0.6)'
+        },
+        {
+          label: user2,
+          data: [stats2.easySolved, stats2.mediumSolved, stats2.hardSolved],
+          backgroundColor: 'rgba(255, 99, 132, 0.6)'
+        }
+      ]
+    },
+    options: { responsive: true }
+  });
+}
+</script>
 </body>
 </html>
